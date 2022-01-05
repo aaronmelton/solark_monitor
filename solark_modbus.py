@@ -1,4 +1,4 @@
-"""A Python list created to make a few short cuts when communicating with the Sol-Ark Inverter."""
+"""A Python list with the Sol-Ark Memory Registers."""
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
@@ -298,7 +298,7 @@ register_table = [
         "key": "grid_side_l1_power",
         "permission": "R",
         # Manually added range; see CHANGELOG.md
-        "range": [0, 12000],
+        "range": [-12000, 12000],
         "unit": "watt",
         "pull": True,
     },
@@ -308,7 +308,7 @@ register_table = [
         "key": "grid_side_l2_power",
         "permission": "R",
         # Manually added range; see CHANGELOG.md
-        "range": [0, 12000],
+        "range": [-12000, 12000],
         "unit": "watt",
         "pull": True,
     },

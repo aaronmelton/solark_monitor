@@ -315,13 +315,13 @@ def main():
     )
     parser.add_argument(
         "--pull",
-        help="Pull Sol-ark Registers and display to console.",
+        help="Pull Sol-Ark Registers and display to console.",
         action="store_true",
         required=False,
     )
     parser.add_argument(
         "--push",
-        help="Push Sol-ark Registers to database.",
+        help="Pull Sol-Ark Registers and insert into database.",
         action="store_true",
         required=False,
     )

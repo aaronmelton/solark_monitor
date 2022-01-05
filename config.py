@@ -7,7 +7,7 @@ import os
 
 # Application Variables
 app_dict = {
-    "author": "Aaron Melton <aaron@aaronmelton.com",
+    "author": "Aaron Melton <aaron@aaronmelton.com>",
     "date": "2022-01-04",
     # pylint: disable=C0301
     "desc": "A Python script to read memory register(s) from Sol-Ark Inverters and insert them into a database.",
