@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [0.2.1] - 2022-01-05
+### Changed
+- Improved SQL query to satisfy Pylint (formatting) and Bandit (SQLi) findings.
+- Converted args description from % (old code) to f-string format.
+- Removed the logging statement recording the query statement (left in by
+  mistake).
+
 ## [0.2.0] - 2022-01-04
 ### Added
 - Sol-Ark Modbus RTU Protocol document does not provide any data ranges for

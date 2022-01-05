@@ -8,17 +8,20 @@ import os
 # Application Variables
 app_dict = {
     "author": "Aaron Melton <aaron@aaronmelton.com>",
-    "date": "2022-01-04",
-    # pylint: disable=C0301
+    "date": "2022-01-05",
+    # pylint: disable=line-too-long
     "desc": "A Python script to read memory register(s) from Sol-Ark Inverters and insert them into a database.",
     "name": "solark_monitor.py",
     "title": "Solark Monitor",
     "url": "https://github.com/aaronmelton/solark_monitor",
-    "version": "v0.2.0",
+    "version": "v0.2.1",
 }
 
 # Logging Variables
-log_dict = {"level": os.environ.get("LOG_LEVEL"), "path": os.environ.get("LOG_PATH")}
+log_dict = {
+    "level": os.environ.get("LOG_LEVEL"),
+    "path": os.environ.get("LOG_PATH")
+}
 
 # Modbus Variables
 modbus_dict = {

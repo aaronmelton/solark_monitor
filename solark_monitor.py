@@ -295,23 +295,8 @@ def main():
 
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=(
-            config.app_dict["name"]
-            + " "
-            + config.app_dict["version"]
-            + " "
-            + config.app_dict["date"]
-            + "\n"
-            + "--\n"
-            + "Description: "
-            + config.app_dict["desc"]
-            + "\n"
-            + "Author:      "
-            + config.app_dict["author"]
-            + "\n"
-            + "URL:         "
-            + config.app_dict["url"]
-        ),
+        # pylint: disable=line-too-long
+        description=f"""{config.app_dict["name"]} {config.app_dict["version"]} {config.app_dict["date"]}\n--\nDescription: {config.app_dict["desc"]}\nAuthor:      {config.app_dict["author"]}\nURL:         {config.app_dict["url"]}""",
     )
     parser.add_argument(
         "--pull",
@@ -329,13 +314,11 @@ def main():
 
     # Setup Logging Functionality
     logging.basicConfig(
-        filename=config.log_dict["path"]
-        + "solark_monitor_"
-        + datetime.date.today().strftime("%Y%m%d")
-        + ".log",
+        # pylint: disable=line-too-long
+        filename=f"""{config.log_dict["path"]}solark_monitor_{datetime.date.today().strftime("%Y%m%d")}.log""",
         filemode="a",
-        # pylint: disable=C0301
-        format="%(asctime)s  Log Level: %(levelname)-8s  Line: %(lineno)-3d  Function: %(funcName)-21s  Msg: %(message)s",
+        format="{asctime}  Log Level: {levelname:8}  Line: {lineno:3}  Function: {funcName:21}  Msg: {message}",
+        style="{",
         datefmt="%Y-%m-%dT%H:%M:%S",
         level=config.log_dict["level"],
     )
@@ -373,12 +356,9 @@ def main():
 
             db_placeholders = ", ".join(["%s"] * len(new_solark_list))
             db_columns = ", ".join(new_solark_list.keys())
-            query = "INSERT INTO {schema} ({db_columns}) VALUES ({db_placeholders})".format(  # pylint: disable=consider-using-f-string
-                schema=config.db_dict["schema"] + ".solarkmon",
-                db_columns=db_columns,
-                db_placeholders=db_placeholders,
-            )
-            logger.info(query)
+            # pylint: disable=line-too-long
+            query = f"""INSERT INTO {config.db_dict["schema"] + ".solarkmon"} ({db_columns}) VALUES ({db_placeholders})"""
+
             try:
                 db_query(config.db_dict, query, new_solark_list)
             except Exception as some_exception:
