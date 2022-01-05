@@ -7,6 +7,8 @@ A Python script to read memory register(s) from Sol-Ark Inverters and insert the
 ### About This Code
 This script was written in order to maintain local control of your Sol-Ark Inverter.
 
+It is known to work with Model Sol-Ark 12k-P, COMM 142a-0717, MCU Ver6983
+
 #### Why Re-Invent The Wheel?
 * Your Sol-Ark Inverter likely came with a WiFi dongle that allows for remote
   monitoring, troubleshooting and software updates of your inverter.  I have a
