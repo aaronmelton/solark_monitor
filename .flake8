@@ -1,0 +1,3 @@
+[flake8]
+# Ignore long lines and let pylint deal with it
+ignore = E501
