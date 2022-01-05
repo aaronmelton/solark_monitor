@@ -74,15 +74,38 @@ def connect_solark(modbus_dict):
     return modbus_connection
 
 
-def db_query(host, user, passwd, database, query, some_list):
+def check_reg_value(this_solark_list):
+    """Correct register value if not within acceptable range.
+
+    Args
+    ----
+    this_solark_list : list
+
+    Returns
+    -------
+    this_solark_list : list
+    """
+    logger.debug("START")
+    for item in this_solark_list.items():
+        correct_value = value_in_range(item)
+        if not correct_value:
+            logger.warning(
+                "%s value (%s) not in range; Correcting to 0.", item[0], item[1]
+            )
+            this_solark_list[item[0]] = 0
+    logger.debug("STOP")
+    return this_solark_list
+
+
+def db_query(db_deets, query, some_list):
     """Query database and return results.
 
     Args
     ----
-    host : str
-    user : str
-    password : str
-    database : str
+    db_deets["host"] : str
+    db_deets["user"] : str
+    db_deets["passwd"] : str
+    db_deets["database"] : str
     query : str
     some_list : dict
 
@@ -91,6 +114,10 @@ def db_query(host, user, passwd, database, query, some_list):
     output_json : str
     """
     logger.info("START")
+    host = db_deets["host"]
+    user = db_deets["username"]
+    passwd = db_deets["password"]
+    database = db_deets["schema"]
     logger.debug("host=='%s'", host)
     logger.debug("user=='%s'", user)
     logger.debug("passwd=='%s'", passwd)
@@ -100,7 +127,7 @@ def db_query(host, user, passwd, database, query, some_list):
     output_json = []
     database_connection = MySQLdb.connect(host, user, passwd, database)
     cursor = database_connection.cursor()
-    # If some_list is provided, this query will be writing chagnes to
+    # If some_list is provided, this query will be writing changes to
     # the database.
     if some_list:
         try:
@@ -114,19 +141,19 @@ def db_query(host, user, passwd, database, query, some_list):
                 database_connection.commit()
             except Exception as some_exception:
                 logger.exception("ERROR=='%s'", some_exception)
-                logger.error("ERROR commiting changes.")
+                logger.error("ERROR committing changes.")
         except Exception as some_exception:
             logger.error("ERROR running query: %s", str(query))
             logger.exception("ERROR=='%s'", some_exception)
 
-    # If some_list is NOT provdied, this query will be retrieving data
+    # If some_list is NOT provided, this query will be retrieving data
     # from the database.
     if not some_list:
         try:
             logger.info("Querying database...")
             cursor.execute(query)
             # Convert SQL output to JSON.  This way we can iterate
-            # through key:value pairs instead of worring about adjusting
+            # through key:value pairs instead of worrying about adjusting
             # list positions if we change the query
             field_names = [i[0] for i in cursor.description]
             results = cursor.fetchall()
@@ -171,7 +198,7 @@ def read_register(client, addressess, reg_count, reg_unit):
     Args
     ----
     client : pymodbus.client
-    addressess : int
+    addresses : int
     reg_count : int
     reg_unit : int
 
@@ -180,7 +207,7 @@ def read_register(client, addressess, reg_count, reg_unit):
     decoder : str
     """
     logger.debug("START")
-    logger.info("Reading Sol-Ark Register Address %s", addressess)
+    logger.info("Reading Sol-Ark Register Address %s...", addressess)
     reg = client.read_holding_registers(
         address=addressess, count=reg_count, unit=reg_unit
     )
@@ -221,6 +248,38 @@ def temp_in_f(temperature):
     return (int(temp_in_c(temperature)) * 1.8) + 32
 
 
+def value_in_range(this_value):
+    """Determine if register is in defined data range specified in register_table.
+
+    Args
+    ----
+    this_value : tuple
+
+    Returns
+    -------
+    value_valid : bool
+    """
+    logger.debug("START")
+    logger.debug("this_value==%s", this_value)
+    value_valid = True
+    value_index = None
+    value_range = []
+    # this_value will be a Tuple.
+    # this_value[0] is the key
+    # this_value[1] is the value
+
+    value_index = find_item_in_list(this_value[0], register_table, "key")
+    if value_index is not None:
+        value_range = register_table[value_index]["range"]
+        logger.debug("value_range==%s", value_range)
+        if value_range is not None:
+            if this_value[1] not in range(value_range[0], value_range[-1]):
+                value_valid = False
+
+    logger.debug("STOP")
+    return value_valid
+
+
 def main():
     """Main Function.
 
@@ -256,13 +315,13 @@ def main():
     )
     parser.add_argument(
         "--pull",
-        help="Pull Solark Registers and display to terminal.",
+        help="Pull Sol-ark Registers and display to console.",
         action="store_true",
         required=False,
     )
     parser.add_argument(
         "--push",
-        help="Push Solark Registers to database.",
+        help="Push Sol-ark Registers to database.",
         action="store_true",
         required=False,
     )
@@ -296,8 +355,11 @@ def main():
         solark = connect_solark(config.modbus_dict)
         if solark is not None:
             solark_list = build_register_dict(solark, register_table)
-            for item in solark_list:
-                print(item, solark_list[item])
+            new_solark_list = check_reg_value(solark_list)
+
+            for item in new_solark_list.items():
+                print(item)
+
         else:
             logger.error("Unable to connect to Sol-Ark.")
     elif vars(args)["push"]:
@@ -307,30 +369,18 @@ def main():
             solark_list = build_register_dict(solark, register_table)
             timestamp = datetime.datetime.now().isoformat("T")
             solark_list["datetime"] = timestamp
+            new_solark_list = check_reg_value(solark_list)
 
-            ###
-            # INCLUDED TO CAPTURE DEBUG OUTPUT
-            for item in solark_list:
-                logger.info("%s: %s" % (item, solark_list[item]))
-            ###
-            ###
-
-            db_placeholders = ", ".join(["%s"] * len(solark_list))
-            db_columns = ", ".join(solark_list.keys())
-            query = "INSERT INTO %s ( %s ) VALUES ( %s )" % (
-                config.db_dict["schema"] + ".solarkmon",
-                db_columns,
-                db_placeholders,
+            db_placeholders = ", ".join(["%s"] * len(new_solark_list))
+            db_columns = ", ".join(new_solark_list.keys())
+            query = "INSERT INTO {schema} ({db_columns}) VALUES ({db_placeholders})".format(  # pylint: disable=consider-using-f-string
+                schema=config.db_dict["schema"] + ".solarkmon",
+                db_columns=db_columns,
+                db_placeholders=db_placeholders,
             )
+            logger.info(query)
             try:
-                db_query(
-                    config.db_dict["host"],
-                    config.db_dict["username"],
-                    config.db_dict["password"],
-                    config.db_dict["schema"],
-                    query,
-                    solark_list,
-                )
+                db_query(config.db_dict, query, new_solark_list)
             except Exception as some_exception:
                 logger.error("ERROR running db_query")
                 logger.exception("EXCEPTION='%s'", str(some_exception))

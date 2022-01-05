@@ -99,7 +99,7 @@ register_table = [
         "description": "corrected_batt_capacity",
         "key": "corrected_batt_capacity",
         "permission": "R",
-        "range": [0, 100],
+        "range": [0, 1000],
         "unit": "str",
         "pull": True,
     },
@@ -297,7 +297,8 @@ register_table = [
         "description": "grid_side_l1_power",
         "key": "grid_side_l1_power",
         "permission": "R",
-        "range": None,
+        # Manually added range; see CHANGELOG.md
+        "range": [0, 12000],
         "unit": "watt",
         "pull": True,
     },
@@ -306,7 +307,8 @@ register_table = [
         "description": "grid_side_l2_power",
         "key": "grid_side_l2_power",
         "permission": "R",
-        "range": None,
+        # Manually added range; see CHANGELOG.md
+        "range": [0, 12000],
         "unit": "watt",
         "pull": True,
     },
@@ -351,7 +353,8 @@ register_table = [
         "description": "inverter_outputs_l1_power",
         "key": "inverter_outputs_l1_power",
         "permission": "R",
-        "range": None,
+        # Manually added range; see CHANGELOG.md
+        "range": [-32768, 32767],
         "unit": "watt",
         "pull": True,
     },
@@ -360,7 +363,8 @@ register_table = [
         "description": "inverter_outputs_l2_power",
         "key": "inverter_outputs_l2_power",
         "permission": "R",
-        "range": None,
+        # Manually added range; see CHANGELOG.md
+        "range": [-32768, 32767],
         "unit": "watt",
         "pull": True,
     },
@@ -369,8 +373,8 @@ register_table = [
         "description": "inverter_output_total_power",
         "key": "inverter_output_total_power",
         "permission": "R",
-        "range": None,
-        "unit": "watt",
+        # Manually added range; see CHANGELOG.md
+        "range": [-32768, 32767],
         "pull": True,
     },
     {
@@ -477,7 +481,8 @@ register_table = [
         "description": "battery_output_power",
         "key": "battery_output_power",
         "permission": "R",
-        "range": None,
+        # Manually added range; see CHANGELOG.md
+        "range": [-32768, 32767],
         "unit": "watt",
         "pull": True,
     },
@@ -486,7 +491,8 @@ register_table = [
         "description": "battery_output_current",
         "key": "battery_output_current",
         "permission": "R",
-        "range": None,
+        # Manually added range; see CHANGELOG.md
+        "range": [-32768, 32767],
         "unit": "amp",
         "pull": True,
     },

@@ -8,13 +8,13 @@ import os
 # Application Variables
 app_dict = {
     "author": "Aaron Melton <aaron@aaronmelton.com",
-    "date": "2022-01-03",
+    "date": "2022-01-04",
     # pylint: disable=C0301
     "desc": "A Python script to read memory register(s) from Sol-Ark Inverters and insert them into a database.",
     "name": "solark_monitor.py",
     "title": "Solark Monitor",
-    "url": "",
-    "version": "v0.1.1",
+    "url": "https://github.com/aaronmelton/solark_monitor",
+    "version": "v0.2.0",
 }
 
 # Logging Variables
