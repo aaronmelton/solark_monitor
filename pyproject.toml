@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "solark_monitor"
+version = "0.3.0"
+description = "A Python script to read memory register(s) from Sol-Ark Inverters and insert them into a database."
+authors = ["Aaron Melton <aaron@aaronmelton.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pymodbus = "^2.5.3"
+flake8 = "^4.0.1"
+black = "^21.12b0"
+pylint = "^2.12.2"
+pydocstyle = "^6.1.1"
+bandit = "^1.7.1"
+mysqlclient = "^2.1.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

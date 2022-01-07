@@ -10,7 +10,7 @@ import sys
 import time
 import MySQLdb
 
-from pymodbus.client.sync import ModbusSerialClient
+from pymodbus.client.sync import ModbusSerialClient, ModbusTcpClient
 from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadDecoder
 from solark_modbus import register_table
@@ -35,9 +35,14 @@ def build_register_dict(client, reg_table):
     reg_result = {}
     for item in reg_table:
         if item["pull"]:
-            reg_result[item["key"]] = read_register(
-                client, item["address"], 1, 1
-            ).decode_16bit_uint()
+            if item["signed"]:  # If signed integer
+                reg_result[item["key"]] = read_register(
+                    client, item["address"], 1, 1
+                ).decode_16bit_int()
+            else:  # If unsigned integer
+                reg_result[item["key"]] = read_register(
+                    client, item["address"], 1, 1
+                ).decode_16bit_uint()
     logger.debug("STOP")
     return reg_result
 
@@ -51,19 +56,30 @@ def connect_solark(modbus_dict):
 
     Returns
     -------
-    modbus_connection: ModbusSerialClient
+    modbus_connection: ModbusSerialClient or ModbusTcpClient
     """
     logger.debug("START")
+    if modbus_dict["method"] == "rtu":
+        logger.info("Connection to Inverter set to serial.")
+        modbus_connection = ModbusSerialClient(
+            method=modbus_dict["method"],
+            port=modbus_dict["port"],
+            baudrate=modbus_dict["baudrate"],
+            timeout=modbus_dict["timeout"],
+            parity=modbus_dict["parity"],
+            stopbits=modbus_dict["stopbits"],
+            bytesize=modbus_dict["bytesize"],
+        )
+    elif modbus_dict["method"] == "tcp":
+        logger.info("Connection to Inverter set to TCP.")
+        modbus_connection = ModbusTcpClient(
+            host=modbus_dict["hostname"],
+            port=modbus_dict["port"],
+            timeout=modbus_dict["timeout"],
+        )
+    else:
+        modbus_connection = None
     logger.info("Connecting to Sol-Ark Inverter...")
-    modbus_connection = ModbusSerialClient(
-        method=modbus_dict["method"],
-        port=modbus_dict["port"],
-        baudrate=modbus_dict["baudrate"],
-        timeout=modbus_dict["timeout"],
-        parity=modbus_dict["parity"],
-        stopbits=modbus_dict["stopbits"],
-        bytesize=modbus_dict["bytesize"],
-    )
     try:
         if modbus_connection.connect():
             logger.info("Successfully connected to Sol-Ark.")
@@ -335,7 +351,7 @@ def main():
     )
 
     if vars(args)["pull"]:
-        solark = connect_solark(config.modbus_dict)
+        solark = connect_solark(config.modbus_dict_tcp)
         if solark is not None:
             solark_list = build_register_dict(solark, register_table)
             new_solark_list = check_reg_value(solark_list)
@@ -346,7 +362,7 @@ def main():
         else:
             logger.error("Unable to connect to Sol-Ark.")
     elif vars(args)["push"]:
-        solark = connect_solark(config.modbus_dict)
+        solark = connect_solark(config.modbus_dict_tcp)
         # serial_number = read_register(solark, 3, 5, 1).decode_string(10).decode('utf-8')
         if solark is not None:
             solark_list = build_register_dict(solark, register_table)

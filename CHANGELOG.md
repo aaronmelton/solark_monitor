@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## [0.3.0] - 2022-01-06
+### Added
+- Added Modbus via TCP connection as an option.  Dictionary passed to the 
+  connect_solark() function defines which Modbus connection (Serial/TCP) is
+  used.
+- Now that I'm obtaining my Modbus values via TCP, I'm moving back to managing
+  packages with Poetry vs Pip.
+### Changed
+- Determined that all values were treated as unsigned integers leading to
+  incorrect values for some registers.  Added additional fields to 
+  register_table[] to define which values are signed and which are unsigned and
+  updated the build_register_dict() function to return the correct value.
+### Removed
+- requirements.txt -- now using Poetry for package management.
+
 ## [0.2.1] - 2022-01-05
 ### Changed
 - Improved SQL query to satisfy Pylint (formatting) and Bandit (SQLi) findings.

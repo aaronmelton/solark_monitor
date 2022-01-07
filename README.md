@@ -40,44 +40,26 @@ It is known to work with Model Sol-Ark 12k-P, COMM 142a-0717, MCU Ver6983
 * Because I can.  I enjoy writing code and learning new technology.
 
 #### Design Decisions
-* I would have preferred to use Poetry > Pip but felt like I was fighting a losing
-  battle developing this code under Python 3.10 in an x86_64 environment only
-  to run it using Python 3.7 in an armv6 environment. So requirements.txt is what
-  you get. :)
 * I'm only working with Read-Only memory registers here.  My inverter is still
   too shiny for me to venture into voiding-warranty territory.
 * solar_modbus.py was created to contain what I knew about the Sol-Ark's memory
-  registers; What they refer to as their Real-time Running Data.  I later included
-  the range values as a sanity check given what appeared to be bad values being
-  reported by the inverter.  Consider Register #167, Grid Side L1 Power:
-  The Real-Time Data table says this is a Signed Integer.  Since it's a signed
-  integer, I'm assuming a positive value is pulling from the grid and a negative
-  value is sell-back.  Therefore, I've set the valid range for this memory
-  register (according to my register_table list) between -12,000 and 12,000 watts.
-  (I know this exceeds the capabilities of the inverter but a little extra margin
-  shouldn't matter here.)  I'm not currently selling-back to my co-op so this value
-  <em>should be</em> zero (or a small number at the very least) when I am not
-  drawing power from the grid.  However, the memory register will often return
-  an integer with a value in the  64,000-65,000ish range.  The check_reg_value()
-   function determines if the memory register value reported by the inverter
-   exceeds the defined range in the register_table list and if so, it sets it to
-   zero.  This prevents errors when attempting to insert this value into my
-   database AND prevents a bad value from skewing any charting of the values.
+  registers; I later included the range values as a sanity check.  (What I
+  previously thought were incorrect values by my inverter were actually being
+  decoded incorrectly.)
 * MySQL: I went with what I know.  I would have liked to try a time-series
   database (like InfluxDB).  Perhaps in a new release?
 * Script variables are picked up from the environment (see config.py).
 
 ### Prerequisites
-* A computer located near your inverter.  I'm using a Raspberry Pi 3 Model B v1.2.
+* A computer located near your inverter to make the Modbus calls to the
+  inverter.  (I'm using a Raspberry Pi 3 Model B v1.2.)
 * A specially-crafted cable to connect your computer to your inverter.  The
   MODBUS/RJ45 Application Note in your manual has some info.  I'm using a
   [JBtek USB to RS485 Converter Adapter](https://www.amazon.com/gp/product/B00NKAJGZM/ref=ppx_yo_dt_b_asin_title_o06_s00?ie=UTF8&psc=1) 
   as mentioned by [Solardad's first post in this thread](https://diysolarforum.com/threads/sol-ark-inverter-monitoring.23717/#post-279953) on the Solar DIY Forums.
-* Python ^3.7.3
-* default-libmysqlclient-dev package for Raspbian.
 
 #### Python Libraries
-* See [requirements.txt](requirements.txt)
+* See [pyproject.toml](pyproject.toml)
 
 ### Instructions For Use
 
@@ -86,6 +68,7 @@ It is known to work with Model Sol-Ark 12k-P, COMM 142a-0717, MCU Ver6983
 ## Acknowledgements
 * Solardad's [Sol-Ark - Inverter Monitoring](https://diysolarforum.com/threads/sol-ark-inverter-monitoring.23717/) thread on DIY Solar Power Forum.
 * offthehook for [sharing his code](https://diysolarforum.com/threads/sol-ark-inverter-monitoring.23717/post-299534) illustrating how to read memory registers via pymodbus.
+* Borrowed some techniques from [Home Assistant integration for the SolArk PV Inverter](https://github.com/pbix/HA-solark-PV).
 
 ## Authors
 * **Aaron Melton** - *Author* - Aaron Melton <aaron@aaronmelton.com>
