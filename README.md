@@ -2,6 +2,8 @@
 
 A Python script to read memory register(s) from Sol-Ark Inverters and insert them into a database.
 
+![Sol-Ark Dashboard](solark_dashboard.png)
+
 ## Getting Started
 
 ### About This Code
