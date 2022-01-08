@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.3.1] - 2022-01-07
+### Changed
+- value_in_range(): Corrected range function to include the last element in the
+  range.
+
 ## [0.3.0] - 2022-01-06
 ### Added
 - Added Modbus via TCP connection as an option.  Dictionary passed to the 

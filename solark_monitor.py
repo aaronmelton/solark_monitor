@@ -289,7 +289,7 @@ def value_in_range(this_value):
         value_range = register_table[value_index]["range"]
         logger.debug("value_range==%s", value_range)
         if value_range is not None:
-            if this_value[1] not in range(value_range[0], value_range[-1]):
+            if this_value[1] not in range(value_range[0], (value_range[-1] + 1)):
                 value_valid = False
 
     logger.debug("STOP")
