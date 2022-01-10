@@ -23,10 +23,6 @@ It is known to work with Model Sol-Ark 12k-P, COMM 142a-0717, MCU Ver6983
   - The same data I'm collecting via MODBUS protocol from the inverter is being
     sent overseas to China.  I perfer my data not be collected by unknown parties
     in a different country.
-  - If the data is being shipped off-site to China, I'll assume remote access is
-    also provided by the same connection and that's all the more reason to retain
-    local control of my investment.  (I'll happily retract this statement if
-    Sol-Ark cares to correct me.)
   - The application/website (PowerView) used by Sol-Ark is also developed and
     maintained in China.  This application allows you to remotely alter the
     configuration of your inverter.  This same application also allows anyone
@@ -64,6 +60,8 @@ It is known to work with Model Sol-Ark 12k-P, COMM 142a-0717, MCU Ver6983
 * See [pyproject.toml](pyproject.toml)
 
 ### Instructions For Use
+
+* Rename solark_modbus_example.py and add any missing values you care to monitor.
 
 ![RTFM](instructions.png)
 
