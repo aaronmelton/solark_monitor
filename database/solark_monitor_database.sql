@@ -62,7 +62,7 @@ CREATE TABLE `solarkmon` (
   `pv1_input_power` smallint(5) unsigned DEFAULT NULL,
   `pv2_input_power` smallint(5) unsigned DEFAULT NULL,
   `battery_output_power` smallint(6) DEFAULT NULL,
-  `battery_output_current` decimal(4,2) DEFAULT NULL,
+  `battery_output_current` decimal(5,2) DEFAULT NULL,
   `load_frequency` decimal(4,2) unsigned DEFAULT NULL,
   `inverter_output_frequency` decimal(3,1) unsigned DEFAULT NULL,
   `grid_side_relay_status` tinyint(3) unsigned DEFAULT NULL,
