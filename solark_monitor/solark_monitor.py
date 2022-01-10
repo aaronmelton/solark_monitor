@@ -35,14 +35,28 @@ def build_register_dict(client, reg_table):
     reg_result = {}
     for item in reg_table:
         if item["pull"]:
-            if item["signed"]:  # If signed integer
-                reg_result[item["key"]] = read_register(
+            if item["signed"] and item["bits"] == 16:
+                corrected_register = read_register(
                     client, item["address"], 1, 1
                 ).decode_16bit_int()
-            else:  # If unsigned integer
-                reg_result[item["key"]] = read_register(
+            elif not item["signed"] and item["bits"] == 16:
+                corrected_register = read_register(
                     client, item["address"], 1, 1
                 ).decode_16bit_uint()
+            elif item["signed"] and item["bits"] == 32:
+                corrected_register = read_register(
+                    client, item["address"], 2, 1
+                ).decode_32bit_int()
+            elif not item["signed"] and item["bits"] == 32:
+                corrected_register = read_register(
+                    client, item["address"], 2, 1
+                ).decode_32bit_uint()
+            else:
+                logger.warning("Error reading register; Setting corrected_register=0.")
+                corrected_register = 0
+            if item["multiplier"]:
+                corrected_register = corrected_register / item["multiplier"]
+            reg_result[item["key"]] = corrected_register
     logger.debug("STOP")
     return reg_result
 
@@ -88,29 +102,6 @@ def connect_solark(modbus_dict):
         logger.error("ERROR connecting to Sol-Ark.")
     logger.debug("STOP")
     return modbus_connection
-
-
-def check_reg_value(this_solark_list):
-    """Correct register value if not within acceptable range.
-
-    Args
-    ----
-    this_solark_list : list
-
-    Returns
-    -------
-    this_solark_list : list
-    """
-    logger.debug("START")
-    for item in this_solark_list.items():
-        correct_value = value_in_range(item)
-        if not correct_value:
-            logger.warning(
-                "%s value (%s) not in range; Correcting to 0.", item[0], item[1]
-            )
-            this_solark_list[item[0]] = 0
-    logger.debug("STOP")
-    return this_solark_list
 
 
 def db_query(db_deets, query, some_list):
@@ -185,29 +176,6 @@ def db_query(db_deets, query, some_list):
     return output_json
 
 
-def find_item_in_list(this_item, this_list, key):
-    """Find the position of a string in a list of lists.
-
-    Args
-    ----
-    this_item : str
-    this_list : dict
-    key : str
-
-    Returns
-    -------
-    index : int
-    """
-    logger.debug("START")
-    index = None
-    for index, row in enumerate(this_list):
-        if row[key] == this_item:
-            break
-    logger.debug("index=='%s'", index)
-    logger.debug("STOP")
-    return index
-
-
 def read_register(client, addressess, reg_count, reg_unit):
     """Return register from Sol-Ark Inverter.
 
@@ -230,70 +198,7 @@ def read_register(client, addressess, reg_count, reg_unit):
     decoder = BinaryPayloadDecoder.fromRegisters(
         reg.registers, byteorder=Endian.Big, wordorder=Endian.Little
     )
-    logger.debug("STOP")
     return decoder
-
-
-def temp_in_c(temperature):
-    """Convert register to Degrees Celsius.
-
-    Args
-    ----
-    temperature : str
-
-    Returns
-    -------
-    return : int
-    """
-    logger.debug("")
-    return (int(temperature) - 1000) / 10.0
-
-
-def temp_in_f(temperature):
-    """Convert integer to Degrees Fahrenheit.
-
-    Args
-    ----
-    temperature : str
-
-    Returns
-    -------
-    return : int
-    """
-    logger.debug("")
-    return (int(temp_in_c(temperature)) * 1.8) + 32
-
-
-def value_in_range(this_value):
-    """Determine if register is in defined data range specified in register_table.
-
-    Args
-    ----
-    this_value : tuple
-
-    Returns
-    -------
-    value_valid : bool
-    """
-    logger.debug("START")
-    logger.debug("this_value==%s", this_value)
-    value_valid = True
-    value_index = None
-    value_range = []
-    # this_value will be a Tuple.
-    # this_value[0] is the key
-    # this_value[1] is the value
-
-    value_index = find_item_in_list(this_value[0], register_table, "key")
-    if value_index is not None:
-        value_range = register_table[value_index]["range"]
-        logger.debug("value_range==%s", value_range)
-        if value_range is not None:
-            if this_value[1] not in range(value_range[0], (value_range[-1] + 1)):
-                value_valid = False
-
-    logger.debug("STOP")
-    return value_valid
 
 
 def main():
@@ -354,29 +259,24 @@ def main():
         solark = connect_solark(config.modbus_dict_tcp)
         if solark is not None:
             solark_list = build_register_dict(solark, register_table)
-            new_solark_list = check_reg_value(solark_list)
-
-            for item in new_solark_list.items():
+            for item in solark_list.items():
                 print(item)
-
         else:
             logger.error("Unable to connect to Sol-Ark.")
     elif vars(args)["push"]:
         solark = connect_solark(config.modbus_dict_tcp)
-        # serial_number = read_register(solark, 3, 5, 1).decode_string(10).decode('utf-8')
         if solark is not None:
             solark_list = build_register_dict(solark, register_table)
-            timestamp = datetime.datetime.now().isoformat("T")
-            solark_list["datetime"] = timestamp
-            new_solark_list = check_reg_value(solark_list)
+            solark_list["datetime"] = datetime.datetime.now().isoformat("T")
+            solark_list["timestamp"] = int(time.time())
 
-            db_placeholders = ", ".join(["%s"] * len(new_solark_list))
-            db_columns = ", ".join(new_solark_list.keys())
+            db_placeholders = ", ".join(["%s"] * len(solark_list))
+            db_columns = ", ".join(solark_list.keys())
             # pylint: disable=line-too-long
             query = f"""INSERT INTO {config.db_dict["schema"] + ".solarkmon"} ({db_columns}) VALUES ({db_placeholders})"""
 
             try:
-                db_query(config.db_dict, query, new_solark_list)
+                db_query(config.db_dict, query, solark_list)
             except Exception as some_exception:
                 logger.error("ERROR running db_query")
                 logger.exception("EXCEPTION='%s'", str(some_exception))

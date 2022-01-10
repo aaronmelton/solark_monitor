@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## [0.4.0] - 2022-01-09
+### Added
+- Added screenshot of Grafana Dashboard.
+- Added Grafana Dashboard JSON file.
+### Changed
+- Moved code into project subdirectory.
+- build_register_dict(): Improved functions to decode 16 and 32-bit registers.
+  This should fix the issue with registers falling outside vendor-defined
+  integer ranges.
+### Removed
+- check_reg_value() function: No longer used after correcting for reading
+  unsigned integers.
+- find_item_in_list() function: No longer used after correcting for reading
+  unsigned integers.
+- temp_in_c() function: Not used.
+- temp_in_f() function: Not used.
+- value_in_range() function: No longer used after correcting for reading
+  unsigned integers.
+
 ## [0.3.1] - 2022-01-07
 ### Changed
 - value_in_range(): Corrected range function to include the last element in the
@@ -18,7 +37,7 @@
   register_table[] to define which values are signed and which are unsigned and
   updated the build_register_dict() function to return the correct value.
 ### Removed
-- requirements.txt -- now using Poetry for package management.
+- requirements.txt: now using Poetry for package management.
 
 ## [0.2.1] - 2022-01-05
 ### Changed
