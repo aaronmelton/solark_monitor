@@ -944,8 +944,8 @@
           "format": "time_series",
           "group": [],
           "metricColumn": "none",
-          "rawQuery": false,
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  battery_output_power\nFROM solarkmon\nWHERE\n  $__unixEpochFilter(timestamp)\nORDER BY timestamp",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  timestamp AS \"time\",\n  SUM(GREATEST(battery_output_power, 0))\nFROM solarkmon\nWHERE\n  $__unixEpochFilter(timestamp)\nORDER BY timestamp",
           "refId": "A",
           "select": [
             [
@@ -1412,6 +1412,6 @@
   "timezone": "",
   "title": "Sol-Ark Monitor",
   "uid": "25aGUU07z",
-  "version": 23,
+  "version": 24,
   "weekStart": "sunday"
 }
