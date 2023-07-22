@@ -127,7 +127,7 @@ def db_query(db_deets, query, some_list):
     database = db_deets["schema"]
     logger.debug("host=='%s'", host)
     logger.debug("user=='%s'", user)
-    logger.debug("passwd=='%s'", passwd)
+    # logger.debug("passwd=='%s'", passwd)  # Reveals sensitive data
     logger.debug("database=='%s'", database)
     logger.debug("query=='%s'", query)
     logger.debug("some_list=='%s'", some_list)
