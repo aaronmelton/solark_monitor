@@ -10,9 +10,10 @@ import sys
 import time
 import MySQLdb
 
-from pymodbus.client.sync import ModbusSerialClient, ModbusTcpClient
+from pymodbus.client import ModbusSerialClient, ModbusTcpClient
 from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadDecoder
+# edit the solark_modbus_example.py to fit your needs, copy and rename it to solark_modbus.py
 from solark_modbus import register_table
 
 import config
