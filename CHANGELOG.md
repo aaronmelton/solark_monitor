@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.5.0] - 2023-07-22
+### Changed
+- solark_monitor.py: Commented out debug log that captures password.
+- pyproject.toml: Updating libraries.
+
+
 ## [0.4.0] - 2022-01-09
 ### Added
 - Added screenshot of Grafana Dashboard.
@@ -19,10 +25,12 @@
 - value_in_range() function: No longer used after correcting for reading
   unsigned integers.
 
+
 ## [0.3.1] - 2022-01-07
 ### Changed
 - value_in_range(): Corrected range function to include the last element in the
   range.
+
 
 ## [0.3.0] - 2022-01-06
 ### Added
@@ -39,12 +47,14 @@
 ### Removed
 - requirements.txt: now using Poetry for package management.
 
+
 ## [0.2.1] - 2022-01-05
 ### Changed
 - Improved SQL query to satisfy Pylint (formatting) and Bandit (SQLi) findings.
 - Converted args description from % (old code) to f-string format.
 - Removed the logging statement recording the query statement (left in by
   mistake).
+
 
 ## [0.2.0] - 2022-01-04
 ### Added
@@ -71,9 +81,11 @@
   Ignoring this warning.
 - Improved db_query() by reducing function input arguments.
 
+
 ## [0.1.1] - 2022-01-03
 ### Changed
 - Improving debug logging to include the values of each register.
+
 
 ## [0.1.1] - 2022-01-01
 ### Added
