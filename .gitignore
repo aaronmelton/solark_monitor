@@ -1,5 +1,8 @@
 # Project-specific files
 *.sublime-*
+.idea/*
+**/run_*.sh
+**/.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
