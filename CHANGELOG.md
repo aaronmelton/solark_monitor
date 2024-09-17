@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.6.2] - 2024-09-17
+### Fixed
+- Dockerfile: Ignoring isort checks on test directory.
+- docker-compose.yml: Making environment variables unique; Added log directory.
+
+
 ## [0.6.1] - 2024-09-17
 ### Added
 - Added required files to user Docker.

@@ -41,7 +41,7 @@ RUN echo '-->Running Flake8p' && \
     echo '-->Running Black' && \
     black --config pyproject.toml --check --diff . && \
     echo '-->Running isort' && \
-    find . -path ./tests -prune -name '*.py' | xargs isort && \
+    find . -name '*.py' -not -path '*/tests/*' | xargs isort --profile black --skip tests/ && \
     echo '-->Running Pylint' && \
     find . -name '*.py' | xargs pylint --rcfile=pyproject.toml && \
     echo '-->Running pydocstyle' && \
@@ -85,3 +85,4 @@ RUN chown -R docker:docker /app
 USER docker
 
 ENTRYPOINT ["/app/entrypoint.sh"]
+

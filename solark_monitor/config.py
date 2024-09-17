@@ -22,14 +22,14 @@ class Config:
             "desc": "A Python script to read memory register(s) from Sol-Ark Inverters and insert them into a database.",
             "title": "solark_monitor",
             "url": "https://github.com/aaronmelton/solark_monitor",
-            "version": "0.6.1",
+            "version": "0.6.2",
         }
 
         # Logging Variables
         self.log_dict = {
-            "filename": f"""{os_environ.get("LOG_PATH", "./log/")}{self.app_dict["title"]}_{datetime.now().strftime("%Y%m%d")}.log""",
-            "level": os_environ.get("LOG_LEVEL", "INFO"),
-            "path": os_environ.get("LOG_PATH", "./log/"),
+            "filename": f"""{os_environ.get("SOLARK_LOG_PATH", "./log/")}{self.app_dict["title"]}_{datetime.now().strftime("%Y%m%d")}.log""",
+            "level": os_environ.get("SOLARK_LOG_LEVEL", "INFO"),
+            "path": os_environ.get("SOLARK_LOG_PATH", "./log/"),
         }
 
         # Modbus Variables
@@ -44,16 +44,16 @@ class Config:
         }
         self.modbus_dict_tcp = {
             "method": "tcp",
-            "hostname": os_environ.get("INV_HOSTNAME"),
+            "hostname": os_environ.get("SOLARK_INV_HOSTNAME"),
             "port": "502",
             "timeout": 5,
         }
 
         # Database Variables
         self.db_dict = {
-            "host": os_environ.get("DB_HOSTNAME"),
-            "username": os_environ.get("DB_USERNAME"),
-            "password": os_environ.get("DB_PASSWORD"),
-            "schema_name": os_environ.get("DB_SCHEMA"),
-            "table_name": os_environ.get("DB_TABLE"),
+            "host": os_environ.get("SOLARK_DB_HOSTNAME"),
+            "username": os_environ.get("SOLARK_DB_USERNAME"),
+            "password": os_environ.get("SOLARK_DB_PASSWORD"),
+            "schema_name": os_environ.get("SOLARK_DB_SCHEMA"),
+            "table_name": os_environ.get("SOLARK_DB_TABLE"),
         }
