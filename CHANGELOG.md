@@ -1,5 +1,40 @@
 # CHANGELOG
 
+## [0.6.0] - 2024-09-17
+### Added
+- CODEOWNERS
+- solark_monitor/__init__.py: Namespace control
+- solark_monitor/log/: Place-holder for log files
+- solark_monitor/solark_modbus.py: A complete list of Sol-Ark memory registers.
+- tests/: One day I'll populate this with some real unit tests.
+### Changed
+- Apologies for the poor CHANGELOG details.  The changes made to this code
+  spanned many months of fractional work that weren't made in smaller commits.
+- README.md: Corrected my abysmal spelling.
+- Bumping Python packages versions.
+- dashboard/grafana_dashboard.json: Updated to match changes made to latest
+  train of Grafana.
+- database/solark_monitor_database.sql: Updating database schema.
+- solark_dashboard.png: I have no idea what changed here.
+- solark_monitor/config.py: Moved configuration variables into a dataclass.
+- solark_monitor/solark_monitor.py
+  - Replacing local functions with those in my aaron_common_libs library.
+  - Removed superfluous logging messages.
+  - Improved function docstrings.
+  - db_query(): Cleaned up this function to remove unused code.
+  - read_register(): Updated to include changes to the Python package.
+    This should resolve Issue #3.
+  - solark(): Included new subcommands to specify how the data was being
+    retrieved (TCP vs Serial); Updated SQL query syntax to remove static
+    schema/table assignment.
+  - 
+### Removed
+- .bandit.yml: Settings moved into pyproject.toml
+- .flake8: Settings moved into pyproject.toml
+- .pydocstyle.ini: Settings moved into pyproject.toml
+- .yamllint: Settings moved into pyproject.toml
+- solark_monitor/solark_modbus_example.py: Replaced with solark_modbus.py
+
 ## [0.5.0] - 2023-07-22
 ### Changed
 - solark_monitor.py: Commented out debug log that captures password.
@@ -61,13 +96,13 @@
 - Sol-Ark Modbus RTU Protocol document does not provide any data ranges for
   these memory registers so I've made a best guess based on the operation of the
   inverter or the register description:
-  - grid_side_l1_power: 0->12,000 Watts
-  - grid_side_l2_power: 0->12,000 Watts
-  - battery_output_power: -32768->32767 Watts
-  - battery_output_current: -32768->32767 Amps
-  - inverter_outputs_l1_power: -32768->32767 Watts
-  - inverter_outputs_l2_power: -32768->32767 Watts
-  - inverter_output_total_power: -32768->32767 Watts
+- grid_side_l1_power: 0->12,000 Watts
+- grid_side_l2_power: 0->12,000 Watts
+- battery_output_power: -32768->32767 Watts
+- battery_output_current: -32768->32767 Amps
+- inverter_outputs_l1_power: -32768->32767 Watts
+- inverter_outputs_l2_power: -32768->32767 Watts
+- inverter_output_total_power: -32768->32767 Watts
   When the register value is out of range I am assuming the actual value is 0
   according to my inverter display.  Uncertain if this is the correct approach
   but it's how I've decided to police my database inputs to prevent skewing the

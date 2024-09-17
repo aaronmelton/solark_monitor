@@ -1,23 +1,82 @@
 [tool.poetry]
 name = "solark_monitor"
-version = "0.4.0"
+version = "0.6.0"
 description = "A Python script to read memory register(s) from Sol-Ark Inverters and insert them into a database."
 authors = ["Aaron Melton <aaron@aaronmelton.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
-pymodbus = "^2.5.3"
-mysqlclient = "^2.1.0"
+python = "^3.11"
+aaron-common-libs = {git = "https://github.com/aaronmelton/aaron-common-libs.git"}
+mysqlclient = "^2.2.4"
+pymodbus = "^3.7.2"
+pyserial = "^3.5"
 
 [tool.poetry.dev-dependencies]
-bandit = "^1.7.1"
-black = "^21.12b0"
-flake8 = "^4.0.1"
+bandit = "^1.7.4"
+black = "^24.4.2"
+coverage = "^7.2.7"
+flake8 = "^7.0.0"
 isort = "^5.10.1"
 pydocstyle = "^6.1.1"
-pylint = "^2.12.2"
-pytest = "^6.2.5"
+pylint = "^3.2.7"
+pytest = "^8.3.3"
+pytest-env = "^1.1.4"
+toml = "^0.10.2"
+Flake8-pyproject = "^1.2.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.bandit]
+skips = ["B108"]
+exclude_dirs = ["./tests/"]
+
+[tool.black]
+line-length = 120
+include = '\.pyi?$'
+exclude = '''
+        /(
+          \.git
+        | \.tox
+        | \.venv
+        | env/
+        | _build
+        | build
+        | dist
+        )/
+    '''
+
+[tool.flake8]
+ignore = ['E501', 'W503']
+
+[tool.isort]
+profile = "black"
+
+[tool.pydocstyle]
+convention = '''google'''
+inherit = false
+match = '''(?!__init__).*\.py'''
+match-dir = '''(?!tests)[^\.].*'''
+
+[tool.pylint.master]
+init-hook = 'import os, sys; sys.path.append(os.path.dirname("solark_monitor/"));'
+
+[tool.pylint.messages_control]
+disable = '''
+    line-too-long,
+    singleton-comparison,
+    too-many-lines,
+    use-implicit-booleaness-not-comparison
+    '''
+
+[tool.pylint.miscellaneous]
+notes = ''',
+    TODO.md,
+    '''
+
+[tool.pytest.ini_options]
+pythonpath = [".", "solark_monitor/"]
+env = ["LOG_LEVEL = DEBUG",
+    "LOG_PATH = /tmp/",
+    "API_KEY = test-s3cr3tk3y"]
