@@ -1,0 +1,16 @@
+**/*.log*
+**/*.tar.gz
+**/*.txt
+**/.DS_Store
+**/.coverage
+**/.pytest_cache
+**/__pycache__/
+**/bin/
+**/include/
+**/lib/
+**/lib64
+**/run*.sh
+.env
+.git/
+.gitignore
+.gitlab-ci.yml

@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [0.6.1] - 2024-09-17
+### Added
+- Added required files to user Docker.
+### Fixed
+- Resolved an issue where results of db_query() were not captured.
+
+
 ## [0.6.0] - 2024-09-17
 ### Added
 - CODEOWNERS

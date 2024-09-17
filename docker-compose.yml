@@ -1,0 +1,18 @@
+---
+services:
+  solark_monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: solark_monitor:latest
+    environment:
+      - LOG_LEVEL=${SOLARK_LOG_LEVEL}
+      - LOG_PATH=${SOLARK_LOG_PATH}
+      - INV_HOSTNAME=${SOLARK_INV_HOSTNAME}
+      - DB_HOSTNAME=${SOLARK_DB_HOSTNAME}
+      - DB_USERNAME=${SOLARK_DB_USERNAME}
+      - DB_PASSWORD=${SOLARK_DB_PASSWORD}
+      - DB_SCHEMA=${SOLARK_DB_SCHEMA}
+      - DB_TABLE=${SOLARK_DB_TABLE}
+    volumes:
+      - /tmp:/app/log:z

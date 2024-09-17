@@ -22,7 +22,7 @@ class Config:
             "desc": "A Python script to read memory register(s) from Sol-Ark Inverters and insert them into a database.",
             "title": "solark_monitor",
             "url": "https://github.com/aaronmelton/solark_monitor",
-            "version": "0.6.0",
+            "version": "0.6.1",
         }
 
         # Logging Variables

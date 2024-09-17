@@ -1,15 +1,15 @@
 [tool.poetry]
 name = "solark_monitor"
-version = "0.6.0"
+version = "0.6.1"
 description = "A Python script to read memory register(s) from Sol-Ark Inverters and insert them into a database."
 authors = ["Aaron Melton <aaron@aaronmelton.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.11"
 aaron-common-libs = {git = "https://github.com/aaronmelton/aaron-common-libs.git"}
-mysqlclient = "^2.2.4"
 pymodbus = "^3.7.2"
 pyserial = "^3.5"
+mysqlclient = "^2.2.4"
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.7.4"
