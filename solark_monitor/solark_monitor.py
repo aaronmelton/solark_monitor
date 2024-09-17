@@ -106,14 +106,14 @@ def db_query(db_details, query, some_dict):
     Returns:
         output_json (str)
     """
-    output_json = []
+    output_json = {}
     database_connection = MySQLdb.connect(
         db_details["host"], db_details["username"], db_details["password"], db_details["schema_name"]
     )
     cursor = database_connection.cursor()
     try:  # Execute database query
         logger.info("Writing changes to database...")
-        cursor.execute(
+        output_json = cursor.execute(
             query.format(schema_name=db_details["schema_name"], table_name=db_details["table_name"]),
             some_dict.values(),
         )
@@ -187,7 +187,7 @@ def solark(args):
         solark_dict["timestamp"] = int(time.time())
         query = """INSERT INTO {schema_name}.{table_name} (day_active_power, total_active_power_low_word, total_active_power_high_word, grid_frequency, dcdc_transformer_temp, igbt_heat_sink_temp, fault_info_word_1, fault_info_word_2, fault_info_word_3, fault_info_word_4, corrected_batt_capacity, daily_pv_power, dc_voltage_1, dc_current_1, dc_voltage_2, dc_current_2, grid_side_voltage_l1n, grid_side_voltage_l2n, grid_side_voltage_l1l2, voltage_middle_side_relay_l1l2, inverter_output_voltage_l1n, inverter_output_voltage_l2n, inverter_output_voltage_l1l2, load_voltage_l1, load_voltage_l2, grid_side_current_l1, grid_side_current_l2, grid_external_limiter_current_l1, grid_external_limiter_current_l2, inverter_output_current_l1, inverter_output_current_l2, gen_ac_coupled_power_input, grid_side_l1_power, grid_side_l2_power, total_power_grid_side_l1l2, grid_external_limiter1_power, grid_external_limiter2_power, grid_external_total_power, inverter_outputs_l1_power, inverter_outputs_l2_power, inverter_output_total_power, load_side_l1_power, load_side_l2_power, load_side_total_power, load_current_l1, load_current_l2, gen_port_voltage_l1l2, battery_temp, battery_voltage, battery_capacity_soc, pv1_input_power, pv2_input_power, battery_output_power, battery_output_current, load_frequency, inverter_output_frequency, grid_side_relay_status, generator_side_relay_status, generator_relay_frequency, datetime, timestamp) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
         try:
-            db_query(config.db_dict, query, solark_dict)
+            solark_results = db_query(config.db_dict, query, solark_dict)
         except Exception as some_exception:  # pylint: disable=broad-exception-caught
             logger.error("ERROR running db_query")
             logger.exception("EXCEPTION='%s'", str(some_exception))
