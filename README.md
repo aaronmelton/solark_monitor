@@ -79,12 +79,12 @@ It is known to work with Model Sol-Ark 12k-P, COMM 142a-0717, MCU Ver6983.
 * Install Python dependencies: `poetry update`
 * Test run script: `python3 solark_monitor.py solark --help`
 * Set the following environment variables (or modify `config.py` to hard-code them):
-  * INV_HOSTNAME: Hostname or IP Address of the device providing RTU data.
-  * DB_HOSTNAME: Hostname or IP Address of the database server.
-  * DB_USERNAME: Database username with write permissions.
-  * DB_PASSWORD: Database username's password
-  * DB_SCHEMA: Name of the database schema.
-  * DB_TABLE: Name of the database table.
+  * SOLARK_INV_HOSTNAME: Hostname or IP Address of the device providing RTU data.
+  * SOLARK_DB_HOSTNAME: Hostname or IP Address of the database server.
+  * SOLARK_DB_USERNAME: Database username with write permissions.
+  * SOLARK_DB_PASSWORD: Database username's password
+  * SOLARK_DB_SCHEMA: Name of the database schema.
+  * SOLARK_DB_TABLE: Name of the database table.
 
 #### Troubleshooting Installation
 * If you encounter an issue installing the Python mysqlclient library, [visit the library project](https://pypi.org/project/mysqlclient/) for more information.

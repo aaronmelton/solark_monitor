@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.6.3] - 2024-09-18
+### Fixed
+- README.md: Correcting environment variables to match new names.
+
+
 ## [0.6.2] - 2024-09-17
 ### Fixed
 - Dockerfile: Ignoring isort checks on test directory.
