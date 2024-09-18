@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "solark_monitor"
-version = "0.6.2"
+version = "0.6.3"
 description = "A Python script to read memory register(s) from Sol-Ark Inverters and insert them into a database."
 authors = ["Aaron Melton <aaron@aaronmelton.com>"]
 
