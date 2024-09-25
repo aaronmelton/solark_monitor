@@ -53,6 +53,7 @@ def build_register_dict(client, reg_table):
             if item["multiplier"]:
                 corrected_register = corrected_register / item["multiplier"]
             reg_result[item["key"]] = corrected_register
+            logger.debug("corrected_register==%s", corrected_register)
     return reg_result
 
 
@@ -148,7 +149,6 @@ def read_register(client, address, reg_count, reg_unit):
     logger.info("Reading Sol-Ark Register Address %s...", address)
     try:
         reg = client.read_holding_registers(address=address, count=reg_count)
-        logger.debug("reg==%s", reg)
         decoder = BinaryPayloadDecoder.fromRegisters(reg.registers, byteorder=Endian.BIG, wordorder=Endian.LITTLE)
     except Exception as some_exception:  # pylint: disable=broad-exception-caught
         logger.error("ERROR=='%s'", some_exception)
