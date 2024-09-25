@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [0.6.4] - 2024-09-25
+### Fixed
+- SQL updated per @TheGuruOfNothing's advice on Issue #3.
+### Changed
+- Bumping Python packages versions.
+- Updating astroid (3.2.4 -> 3.3.4)
+- Updating slack-sdk (3.33.0 -> 3.33.1)
+- Updating aaron-common-libs (0.3.2 7cc43a8 -> 0.3.3 823b22d)
+- Updating bandit (1.7.9 -> 1.7.10)
+- Updating pylint (3.2.7 -> 3.3.1)
+
+
 ## [0.6.3] - 2024-09-18
 ### Fixed
 - README.md: Correcting environment variables to match new names.
@@ -45,13 +57,13 @@
   - solark(): Included new subcommands to specify how the data was being
     retrieved (TCP vs Serial); Updated SQL query syntax to remove static
     schema/table assignment.
-  - 
 ### Removed
 - .bandit.yml: Settings moved into pyproject.toml
 - .flake8: Settings moved into pyproject.toml
 - .pydocstyle.ini: Settings moved into pyproject.toml
 - .yamllint: Settings moved into pyproject.toml
 - solark_monitor/solark_modbus_example.py: Replaced with solark_modbus.py
+
 
 ## [0.5.0] - 2023-07-22
 ### Changed

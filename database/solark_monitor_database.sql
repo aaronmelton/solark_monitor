@@ -67,7 +67,7 @@ CREATE TABLE `solarkmon` (
   `inverter_output_frequency` decimal(3,1) unsigned DEFAULT NULL,
   `grid_side_relay_status` tinyint(3) unsigned DEFAULT NULL,
   `generator_side_relay_status` tinyint(3) unsigned DEFAULT NULL,
-  `generator_relay_frequency` decimal(2,1) unsigned DEFAULT NULL,
+  `generator_relay_frequency` decimal(3,1) unsigned DEFAULT NULL,
   PRIMARY KEY (`data_id`),
   UNIQUE KEY `idnew_table_UNIQUE` (`data_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
