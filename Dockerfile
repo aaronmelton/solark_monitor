@@ -1,4 +1,4 @@
-ARG PYTHON_VER=3.11
+ARG PYTHON_VER=3.13
 ARG REPO_NAME=solark-monitor
 
 ##################

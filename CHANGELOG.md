@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## [0.7.0] - 2025-10-22
+### Changed
+- Updated Python version from 3.11 to 3.13
+- Corrected Poetry configuration syntax: [tool.poetry.dev-dependencies] → [tool.poetry.group.dev.dependencies]
+- Updated Python package versions:
+  - pymodbus (3.7.2 → 3.7.4, constrained to ~3.7.4 for API compatibility)
+  - mysqlclient (2.2.4 → 2.2.6)
+  - bandit (1.7.10 → 1.8.0)
+  - black (24.8.0 → 24.10.0)
+  - coverage (7.6.1 → 7.6.9)
+  - pylint (3.3.1 → 3.3.2)
+  - pytest (8.3.3 → 8.3.4)
+  - pytest-env (1.1.4 → 1.1.5)
+- Updated Dockerfile to use Python 3.13
+### Fixed
+- Constrained pymodbus to 3.7.x series to maintain API compatibility (3.8+ has breaking changes)
+
+
 ## [0.6.4] - 2024-09-25
 ### Fixed
 - SQL updated per @TheGuruOfNothing's advice on Issue #3.

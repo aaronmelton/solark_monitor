@@ -18,11 +18,11 @@ class Config:
         """Application Variables."""
         self.app_dict = {
             "author": "Aaron Melton <aaron@aaronmelton.com>",
-            "date": "2024-09-25",
+            "date": "2025-10-22",
             "desc": "A Python script to read memory register(s) from Sol-Ark Inverters and insert them into a database.",
             "title": "solark_monitor",
             "url": "https://github.com/aaronmelton/solark_monitor",
-            "version": "0.6.4",
+            "version": "0.7.0",
         }
 
         # Logging Variables
