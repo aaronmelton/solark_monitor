@@ -17,7 +17,7 @@ RUN poetry config virtualenvs.create false
 
 COPY pyproject.toml .
 
-RUN poetry install --only main
+RUN poetry install --only main --no-root
 
 ##################
 ### TEST IMAGE ###
