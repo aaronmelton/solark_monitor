@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.7.2] - 2025-11-06
+### Fixed
+- Fixed Docker build error by adding --no-root flag to poetry install in base stage
+
 ## [0.7.1] - 2025-11-06
 ### Changed
 - Improved error handling in `build_register_dict()` to check for None returns from `read_register()`
