@@ -39,19 +39,29 @@ def build_register_dict(client, reg_table):
     for item in reg_table:
         logger.debug("item==%s", item)
         if item["pull"]:
+            decoder = None
             if item["signed"] and item["bits"] == 16:
-                corrected_register = read_register(client, item["address"], 1, 1).decode_16bit_int()
+                decoder = read_register(client, item["address"], 1, 1)
+                corrected_register = decoder.decode_16bit_int() if decoder else 0
             elif not item["signed"] and item["bits"] == 16:
-                corrected_register = read_register(client, item["address"], 1, 1).decode_16bit_uint()
+                decoder = read_register(client, item["address"], 1, 1)
+                corrected_register = decoder.decode_16bit_uint() if decoder else 0
             elif item["signed"] and item["bits"] == 32:
-                corrected_register = read_register(client, item["address"], 2, 1).decode_32bit_int()
+                decoder = read_register(client, item["address"], 2, 1)
+                corrected_register = decoder.decode_32bit_int() if decoder else 0
             elif not item["signed"] and item["bits"] == 32:
-                corrected_register = read_register(client, item["address"], 2, 1).decode_32bit_uint()
+                decoder = read_register(client, item["address"], 2, 1)
+                corrected_register = decoder.decode_32bit_uint() if decoder else 0
             else:
                 logger.warning("Error reading register; Setting corrected_register=0.")
                 corrected_register = 0
-            if item["multiplier"]:
+
+            if decoder is None:
+                logger.warning("Failed to read register at address %s; Setting corrected_register=0.", item["address"])
+                corrected_register = 0
+            elif item["multiplier"]:
                 corrected_register = corrected_register / item["multiplier"]
+
             reg_result[item["key"]] = corrected_register
             logger.debug("corrected_register==%s", corrected_register)
     return reg_result
@@ -85,15 +95,21 @@ def connect_solark(modbus_dict):
         logger.info("Connecting to Sol-Ark Inverter via TCP...")
     else:
         modbus_connection = None
+        logger.error("Invalid modbus method specified.")
+        return None
+
     try:
         modbus_connection.connect()
         if modbus_connection.is_socket_open():
             logger.info("Successfully connected to Sol-Ark.")
+            logger.debug("modbus_connection==%s", modbus_connection)
+            return modbus_connection
+        logger.error("ERROR: Socket not open after connect attempt.")
+        return None
     except Exception as some_exception:  # pylint: disable=broad-exception-caught
         logger.exception("ERROR=='%s'", some_exception)
         logger.error("ERROR connecting to Sol-Ark.")
-    logger.debug("modbus_connection==%s", modbus_connection)
-    return modbus_connection
+        return None
 
 
 def db_query(db_details, query, some_dict):
@@ -171,17 +187,26 @@ def solark(args):
     """Subcommand options for Sol-Ark operations."""
     logger.debug("args==%s", vars(args))
     solark_results = {}
+
+    # Establish connection
     if args.serial:
         solark_connected = connect_solark(config.modbus_dict_ser)
     elif args.tcp:
         solark_connected = connect_solark(config.modbus_dict_tcp)
     else:
-        logger.error("Unable to connect to Sol-Ark.")
-        solark_connected = False
-    if args.pull and solark_connected:
+        logger.error("No connection method specified (--serial or --tcp required).")
+        solark_connected = None
+
+    # Check if connection was successful
+    if solark_connected is None:
+        logger.error("Failed to connect to Sol-Ark. Cannot proceed with requested operation.")
+        return solark_results
+
+    # Perform requested operations
+    if args.pull:
         solark_results = build_register_dict(client=solark_connected, reg_table=register_table)
         logger.debug("solark_results==%s", solark_results)
-    if args.pullpush and solark_connected:
+    if args.pullpush:
         solark_dict = build_register_dict(client=solark_connected, reg_table=register_table)
         solark_dict["datetime"] = datetime.datetime.now().isoformat("T")
         solark_dict["timestamp"] = int(time.time())
