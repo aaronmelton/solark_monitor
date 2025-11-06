@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [0.7.1] - 2025-11-06
+### Changed
+- Improved error handling in `build_register_dict()` to check for None returns from `read_register()`
+- Enhanced `connect_solark()` to explicitly return None on connection failures with better validation
+- Added connection validation in `solark()` function to prevent operations on failed connections
+### Fixed
+- Fixed AttributeError crash when Modbus connection fails (prevents calling decode methods on None)
+
+
 ## [0.7.0] - 2025-10-22
 ### Changed
 - Updated Python version from 3.11 to 3.13
