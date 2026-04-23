@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## [0.7.3] - 2026-04-22
+### Security
+- Resolved 14 Dependabot alerts by updating direct and transitive dependencies.
+### Changed
+- Bumped `aaron-common-libs` (0.3.3 → 0.7.0); upstream simplification dropped unused dependencies (`azure-core`, `azure-storage-blob`, `cryptography`, `slack-sdk`, and related transitives).
+- Bumped dev dependencies:
+  - `black` (24.10.0 → 26.3.1) — addresses GHSA arbitrary-file-write in cache file name handling.
+  - `pytest` (8.3.4 → 9.0.3) — addresses GHSA tmpdir handling.
+- Transitive updates via the new `aaron-common-libs`:
+  - `requests` (2.32.3 → 2.33.1)
+  - `urllib3` (2.2.3 → 2.6.3)
+  - `pygments` (2.18.0 → 2.20.0)
+
+
 ## [0.7.2] - 2025-11-06
 ### Fixed
 - Fixed Docker build error by adding --no-root flag to poetry install in base stage
